@@ -26,7 +26,31 @@ export default function SignUp() {
 
         const post = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up', body);
 
-        /* if (post === true) {
+        setButtonText(<ThreeDots
+            text-align="center"
+            height="40"
+            width="40"
+            radius="9"
+            color='white'
+            ariaLabel='three-dots-loading'
+            wrapperStyle
+            wrapperClass
+        />);
+
+        post.then((answer) => {
+            console.log(body);
+            console.log(answer);
+            navigate('/');
+        });
+
+        post.catch((error) => {
+            alert('Erro. Tente novamente');
+            console.log(error);
+            setButtonText('Cadastrar');
+            console.log('fim');
+        });
+
+        /* if (post) {
             post.then((answer) => {
                 console.log(body);
                 console.log(answer);
@@ -36,9 +60,9 @@ export default function SignUp() {
             post.catch((error) => {
                 alert('Erro. Tente novamente');
                 console.log(error);
+                setButtonText('Cadastrar');
+                console.log('fim');
             });
-            setButtonText('Cadastrar');
-            console.log('fim');
         } else {
             setButtonText(<ThreeDots
                 text-align="center"
@@ -52,7 +76,7 @@ export default function SignUp() {
             />);
         } */
 
-        post.then((answer) => {
+        /* post.then((answer) => {
             console.log(body);
             console.log(answer);
             navigate('/');
@@ -61,7 +85,7 @@ export default function SignUp() {
         post.catch((error) => {
             alert('Erro. Tente novamente');
             console.log(error);
-        })
+        }) */
 
     }
 
@@ -116,6 +140,8 @@ const Form = styled.div`
 `;
 
 const Button = styled.button`
+    display: grid;
+    place-items: center;
     width: 303px;
     height: 45px;
     background: #52B6FF;

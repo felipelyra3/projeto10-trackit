@@ -1,12 +1,14 @@
 import logo from "../../assets/images/logo.png"
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import UserContext from "../Contexts/UserContext";
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const context = useContext(UserContext);
     const navigate = useNavigate();
 
     function handleForm(e) {
@@ -21,7 +23,8 @@ export default function Login() {
 
         post.then((answer) => {
             console.log(answer);
-            navigate('/Today', { state: answer.data });
+            context.setUserInfo(answer.data);
+            navigate('/Today');
         })
 
         post.catch((error) => {

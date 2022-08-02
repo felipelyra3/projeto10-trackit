@@ -2,11 +2,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
 import Today from "../Today/Today";
+import Habbits from "../Habbits/Habbits";
+import UserContext from "../Contexts/UserContext";
 import "../../style/reset.css";
+import { useState } from "react";
 
 export default function App() {
+    const [userInfo, setUserInfo] = useState({});
+    const [habitPercentage, setHabitPercentage] = useState(0);
+
     return (
-        <div className='page'>
+        <UserContext.Provider value={{ userInfo, setUserInfo, habitPercentage, setHabitPercentage }}>
             <BrowserRouter>
                 {/* Tudo que tiver uma rota entre Routes */}
                 <Routes>
@@ -14,8 +20,9 @@ export default function App() {
                     <Route path="/" element={<Login />} />
                     <Route path="/SignUp" element={<SignUp />} />
                     <Route path="/Today" element={<Today />} />
+                    <Route path="/Habbits" element={<Habbits />} />
                 </Routes>
             </BrowserRouter>
-        </div>
+        </UserContext.Provider>
     );
 }
