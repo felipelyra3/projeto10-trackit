@@ -7,11 +7,10 @@ import { useContext } from "react";
 
 export default function Menu() {
     const context = useContext(UserContext);
-    context.setHabitPercentage(0);
     console.log(context);
     return (
         <Container>
-            <Link to={`/Habbits`} ><p>Hábitos</p></Link>
+            <Link to={`/Habits`} ><p>Hábitos</p></Link>
             <Link to={`/Today`} ><Today><CircularProgressbar value={context.habitPercentage} text={`Hoje`} background styles={buildStyles({ backgroundColor: '#52B6FF', textColor: 'white' })} /></Today></Link>
             <Link to={`/History`} ><p>Histórico</p></Link>
         </Container>

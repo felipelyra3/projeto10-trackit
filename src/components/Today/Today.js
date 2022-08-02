@@ -40,6 +40,7 @@ export default function Today() {
     const location = useLocation();
     const [request, setRequest] = useState([]);
     const [txt, setTxt] = useState('');
+    const [txtClass, setTxtClass] = useState('');
     const context = useContext(UserContext);
     const dayjs = require('dayjs');
 
@@ -64,13 +65,23 @@ export default function Today() {
         });
     }, []);
 
+    useEffect(() => {
+        if (context.habitPercentage === 0) {
+            setTxtClass('concludedHabbits');
+            setTxt('Nenhum hábito concluído ainda');
+        } else {
+            setTxtClass('concludedHabbits concluded');
+            setTxt(`${context.habitPercentage}% dos hábitos concluídos`);
+        }
+    }, [context.habitPercentage]);
+
     return (
         <>
             <Header image={context.userInfo.image} />
 
             <Page>
                 <Date>{dayjs().format('dddd')}, {dayjs().format('DD/MM')}</Date>
-                <ConcludedHabbits>{txt}</ConcludedHabbits>
+                <div className={txtClass}>{txt}</div>
 
                 <ContainerHabbits>
                     {request.map((habit) => (<HabbitsJSX key={habit.id} {...habit} />))}
@@ -90,6 +101,20 @@ const Page = styled.div`
     width: 100%;
     background: #E5E5E5;
     padding: 90px 12px 0px 12px;
+
+    .concludedHabbits {
+        font-family: 'Lexend Deca', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 17.976px;
+        line-height: 22px;
+        color: #BABABA;
+        margin: 5px 0px 0px 0px;
+    }
+
+    .concluded {
+        color: #8FC549;
+    }
 `;
 
 const Date = styled.span`
