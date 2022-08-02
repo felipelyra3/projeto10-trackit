@@ -1,16 +1,43 @@
 import logo from "../../assets/images/logo.png"
 import styled from "styled-components";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+    function handleForm(e) {
+        e.preventDefault();
+
+        const body = {
+            email: email,
+            password: password
+        }
+
+        const post = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', body);
+
+        post.then((answer) => {
+            console.log(answer);
+            navigate('/Today', { state: answer.data });
+        })
+
+        post.catch((error) => {
+            alert('E-mail ou login inválidos');
+            console.log(error);
+        })
+    }
+
     return (
         <Page>
-            <img src={logo} />
+            <img src={logo} alt="logo" />
 
             <Form>
-                <form>
-                    <input type="email" id="email" placeholder="E-mail"></input><br />
-                    <input type="password" id="password" placeholder="Senha"></input><br />
+                <form onSubmit={handleForm}>
+                    <input type="email" id="email" placeholder="E-mail" value={email} onChange={(e) => { setEmail(e.target.value) }} required></input><br />
+                    <input type="password" id="password" placeholder="Senha" value={password} onChange={(e) => { setPassword(e.target.value) }} required></input><br />
 
                     <Button>Entrar</Button>
                 </form>

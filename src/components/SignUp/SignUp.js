@@ -1,20 +1,82 @@
 import logo from "../../assets/images/logo.png";
 import styled from "styled-components";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useState } from "react";
+import { ThreeDots } from 'react-loader-spinner';
+
 
 export default function SignUp() {
+    const [buttonText, setButtonText] = useState('Cadastrar');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [image, setImage] = useState('');
+    const navigate = useNavigate();
+
+    function handleForm(e) {
+        e.preventDefault();
+
+        const body = {
+            email: email,
+            name: name,
+            image: image,
+            password: password
+        }
+
+        const post = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up', body);
+
+        /* if (post === true) {
+            post.then((answer) => {
+                console.log(body);
+                console.log(answer);
+                navigate('/');
+            });
+
+            post.catch((error) => {
+                alert('Erro. Tente novamente');
+                console.log(error);
+            });
+            setButtonText('Cadastrar');
+            console.log('fim');
+        } else {
+            setButtonText(<ThreeDots
+                text-align="center"
+                height="40"
+                width="40"
+                radius="9"
+                color='white'
+                ariaLabel='three-dots-loading'
+                wrapperStyle
+                wrapperClass
+            />);
+        } */
+
+        post.then((answer) => {
+            console.log(body);
+            console.log(answer);
+            navigate('/');
+        })
+
+        post.catch((error) => {
+            alert('Erro. Tente novamente');
+            console.log(error);
+        })
+
+    }
+
     return (
         <Page>
-            <img src={logo} />
+            <img src={logo} alt="logo" />
 
             <Form>
-                <form>
-                    <input type="email" id="email" placeholder="E-mail"></input><br />
-                    <input type="password" id="email" placeholder="Senha"></input><br />
-                    <input type="text" id="name" placeholder="Nome"></input><br />
-                    <input type="text" id="avatar" placeholder="Foto"></input><br />
+                <form onSubmit={handleForm}>
+                    <input type="email" id="email" placeholder="E-mail" value={email} onChange={(e) => { setEmail(e.target.value) }} required></input><br />
+                    <input type="password" id="password" placeholder="Senha" value={password} onChange={(e) => { setPassword(e.target.value) }} required></input><br />
+                    <input type="text" id="name" placeholder="Nome" value={name} onChange={(e) => { setName(e.target.value) }} required></input><br />
+                    <input type="text" id="image" placeholder="Foto" value={image} onChange={(e) => { setImage(e.target.value) }} required></input><br />
 
-                    <Button>Entrar</Button>
+                    <Button>{buttonText}</Button>
                 </form>
             </Form>
             <AlreadyAccount><Link to={`/`} >Já tem uma conta? Faça login!</Link></AlreadyAccount>
