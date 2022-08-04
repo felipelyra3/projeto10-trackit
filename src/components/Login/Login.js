@@ -4,10 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import axios from "axios";
 import UserContext from "../Contexts/UserContext";
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [buttonText, setButtonText] = useState('Cadastrar');
     const context = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -21,6 +23,17 @@ export default function Login() {
 
         const post = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', body);
 
+        setButtonText(<ThreeDots
+            text-align="center"
+            height="40"
+            width="40"
+            radius="9"
+            color='white'
+            ariaLabel='three-dots-loading'
+            wrapperStyle
+            wrapperClass
+        />);
+
         post.then((answer) => {
             console.log(answer);
             context.setUserInfo(answer.data);
@@ -29,6 +42,7 @@ export default function Login() {
 
         post.catch((error) => {
             alert('E-mail ou login inválidos');
+            setButtonText('Cadastrar');
             console.log(error);
         })
     }
@@ -42,7 +56,7 @@ export default function Login() {
                     <input type="email" id="email" placeholder="E-mail" value={email} onChange={(e) => { setEmail(e.target.value) }} required></input><br />
                     <input type="password" id="password" placeholder="Senha" value={password} onChange={(e) => { setPassword(e.target.value) }} required></input><br />
 
-                    <Button>Entrar</Button>
+                    <Button>{buttonText}</Button>
                 </form>
             </Form>
 
@@ -84,6 +98,8 @@ const Form = styled.div`
 `;
 
 const Button = styled.button`
+    display: grid;
+    place-items: center;
     width: 303px;
     height: 45px;
     background: #52B6FF;

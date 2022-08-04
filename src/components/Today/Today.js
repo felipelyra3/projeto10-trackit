@@ -77,7 +77,7 @@ export default function Today() {
 
     return (
         <>
-            <Header image={context.userInfo.image} />
+            <Header />
 
             <Page>
                 <Date>{dayjs().format('dddd')}, {dayjs().format('DD/MM')}</Date>

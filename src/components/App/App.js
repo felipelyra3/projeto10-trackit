@@ -3,6 +3,8 @@ import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
 import Today from "../Today/Today";
 import Habits from "../Habits/Habits";
+import History from "../History/History";
+import HabitRegister from "../HabitRegister/HabitRegister";
 import UserContext from "../Contexts/UserContext";
 import "../../style/reset.css";
 import { useState } from "react";
@@ -21,6 +23,8 @@ export default function App() {
                     <Route path="/SignUp" element={<SignUp />} />
                     <Route path="/Today" element={<Today />} />
                     <Route path="/Habits" element={<Habits />} />
+                    <Route path="/History" element={<History />} />
+                    <Route path="/HabitRegister" element={<HabitRegister />} />
                 </Routes>
             </BrowserRouter>
         </UserContext.Provider>

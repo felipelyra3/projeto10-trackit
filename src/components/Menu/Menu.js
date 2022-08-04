@@ -7,7 +7,7 @@ import { useContext } from "react";
 
 export default function Menu() {
     const context = useContext(UserContext);
-    console.log(context);
+    //console.log(context);
     return (
         <Container>
             <Link to={`/Habits`} ><p>Hábitos</p></Link>
