@@ -5,6 +5,7 @@ import { useState, useContext } from "react";
 import UserContext from "../Contexts/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { ThreeDots } from 'react-loader-spinner';
 
 function DaysOfTheWeekJSX({ day, toggleSelectedDay }) {
     return (
@@ -22,6 +23,7 @@ export default function HabitRegister() {
     });
     const [selectedDay, setSelectedDay] = useState(false);
     const context = useContext(UserContext);
+    const [buttonText, setButtonText] = useState('Salvar');
     const navigate = useNavigate();
     const [days, setDays] = useState([
         { id: 0, letter: 'D', day: 'domingo', selected: false },
@@ -62,6 +64,17 @@ export default function HabitRegister() {
         } else {
             const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', body, config);
 
+            setButtonText(<ThreeDots
+                text-align="center"
+                height="40"
+                width="40"
+                radius="9"
+                color='white'
+                ariaLabel='three-dots-loading'
+                wrapperStyle
+                wrapperClass
+            />);
+
             promise.then((answer) => {
                 console.log(answer);
                 navigate('/Habits');
@@ -69,6 +82,7 @@ export default function HabitRegister() {
 
             promise.catch((error) => {
                 console.log(error);
+                setButtonText('Salvar');
             });
         }
     }
@@ -103,7 +117,7 @@ export default function HabitRegister() {
                         </Days>
                         <HabitFooter>
                             <Link to={`/Habits`} ><Cancel>Cancelar</Cancel></Link>
-                            <Button>Salvar</Button>
+                            <Button>{buttonText}</Button>
                         </HabitFooter>
                     </Form>
                 </Habit>
@@ -198,6 +212,8 @@ const Cancel = styled.span`
 `;
 
 const Button = styled.button`
+    display: grid;
+    place-items: center;
     width: 84px;
     height: 35px;
     background: #52B6FF;

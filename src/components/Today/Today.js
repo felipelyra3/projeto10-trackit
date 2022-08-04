@@ -53,13 +53,19 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config }
         //setSelectCheckmark(!selectCheckmark);
     }
 
+    let record = false;
+
+    if (currentSequence === highestSequence) {
+        record = true;
+    }
+
     return (
         <Habbits>
             <Texts>
                 <Title>{name}</Title>
                 <Subtitle>
-                    <p>Sequência atual: {currentSequence}</p>
-                    <p>Seu record: {highestSequence}</p>
+                    <p>Sequência atual: <CurrentSequence done={done}>{currentSequence}</CurrentSequence></p>
+                    <p>Seu record: <HighestSequence>{highestSequence}</HighestSequence></p>
                 </Subtitle>
             </Texts>
 
@@ -75,6 +81,7 @@ export default function Today() {
     const [txtClass, setTxtClass] = useState('');
     const context = useContext(UserContext);
     const dayjs = require('dayjs');
+    let qtd = 0;
 
     //console.log(context.userInfo);
 
@@ -99,12 +106,13 @@ export default function Today() {
         });
     }, []);
 
-    for (let i = 0; i < answer.data.length; i++) {
-        let qtd = 0;
-        if (answer.data.done === true) {
+    for (let i = 0; i < request.length; i++) {
+        if (request[i].done === true) {
             qtd++;
         }
     }
+
+    context.setHabitPercentage((qtd / request.length) * 100);
 
     useEffect(() => {
         if (context.habitPercentage === 0) {
@@ -247,4 +255,12 @@ const Check = styled.div`
     selected {
         background: #8FC549;
     }
+`;
+
+const CurrentSequence = styled.span`
+    color: ${props => props.done ? `#8FC549` : `#666666`};
+`;
+
+const HighestSequence = styled.span`
+    color: ${props => props.record ? `#8FC549` : `#666666`};
 `;

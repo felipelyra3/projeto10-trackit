@@ -208,48 +208,6 @@ const Day = styled.li`
         margin: 0px 5px 0px 0px;
 `;
 
-/* const ContainerDays = styled.div`
-    display: flex;
-
-    .days {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 30px;
-        height: 30px;
-        background: #FFFFFF;
-        border: 1px solid #D5D5D5;
-        border-radius: 5px;
-
-        font-family: 'Lexend Deca', sans-serif;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 19.976px;
-        line-height: 25px;
-        color: #DBDBDB;
-        margin: 0px 5px 0px 0px;
-    }
-`;
-
-const Days = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    background: #FFFFFF;
-    border: 1px solid #D5D5D5;
-    border-radius: 5px;
-
-    font-family: 'Lexend Deca', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19.976px;
-    line-height: 25px;
-    color: #DBDBDB;
-    margin: 0px 5px 0px 0px;
-`; */
-
 const Title = styled.span`
     font-family: 'Lexend Deca';
     font-style: normal;
