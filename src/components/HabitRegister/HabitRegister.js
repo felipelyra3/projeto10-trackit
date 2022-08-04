@@ -1,27 +1,15 @@
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import UserContext from "../Contexts/UserContext";
 import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
-function DaysOfTheWeekJSX({ day, setDay, letter, id, selected }) {
-    const [txt, setTxt] = useState('days');
-
-    function toggleSelectedDay() {
-        selected = !selected;
-        if (selected === true) {
-            setTxt('days selected');
-        } else {
-            setTxt('days');
-        }
-        /* console.log('selected: ' + selected);
-        console.log('day[id - 1]: ');
-        console.log(day[id - 1]); */
-    }
-
+function DaysOfTheWeekJSX({ day, toggleSelectedDay }) {
     return (
         <>
-            <div className={txt} onClick={toggleSelectedDay}>{letter}</div>
+            <Day selected={day.selected} onClick={() => { toggleSelectedDay(day.id) }}>{day.letter}</Day>
         </>
     );
 }
@@ -33,6 +21,7 @@ export default function HabitRegister() {
         days: []
     });
     const [selectedDay, setSelectedDay] = useState(false);
+    const context = useContext(UserContext);
     const navigate = useNavigate();
     const [days, setDays] = useState([
         { id: 0, letter: 'D', day: 'domingo', selected: false },
@@ -55,23 +44,51 @@ export default function HabitRegister() {
             }
         }
 
-        console.log(allDaysSelected);
-
-        //navigate('/Habits');
-    }
-
-    /* function toggleSelectedDay(day) {
-        console.log(day);
-        day.selected = !day.selected;
-
-        for (let i = 0; i < days.length; i++) {
-            if (day.selected === true) {
-
-            }
+        const body = {
+            name: obj.name,
+            days: allDaysSelected
         }
 
-        console.log(day);
-    } */
+        const config = {
+            headers: {
+                Authorization: `Bearer ${context.userInfo.token}`
+            }
+        };
+
+        console.log(body);
+
+        if (allDaysSelected.length === 0) {
+            alert('Selecione pelo menos um dia da semana para cadastrar seu hábito');
+        } else {
+            const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', body, config);
+
+            promise.then((answer) => {
+                console.log(answer);
+                navigate('/Habits');
+            });
+
+            promise.catch((error) => {
+                console.log(error);
+            });
+        }
+    }
+
+    function toggleSelectedDay(id) {
+        const array = days.map((day) => {
+            if (id === day.id) {
+                return (
+                    {
+                        ...day,
+                        selected: !day.selected
+                    }
+                );
+            }
+            return day;
+        });
+
+        setDays(array);
+    }
+
 
     return (
         <>
@@ -82,7 +99,7 @@ export default function HabitRegister() {
                         <HabitName><input type="text" id="habitName" placeholder="Nome do hábito" value={obj.name} onChange={
                             (e) => { setObj({ ...obj, name: e.target.value }) }} required></input><br /></HabitName>
                         <Days>
-                            {days.map((day, index) => (<DaysOfTheWeekJSX key={index} {...day} day={days} setDay={setDays} />))}
+                            {days.map((day, index) => (<DaysOfTheWeekJSX key={index} day={day} toggleSelectedDay={toggleSelectedDay} />))}
                         </Days>
                         <HabitFooter>
                             <Link to={`/Habits`} ><Cancel>Cancelar</Cancel></Link>
@@ -139,16 +156,17 @@ const HabitName = styled.div`
     margin: 0px 0px 6px 0px;
 `;
 
-const Days = styled.div`
+const Days = styled.ul`
     display: flex;
+`;
 
-    .days {
+const Day = styled.li`
         display: flex;
         justify-content: center;
         align-items: center;
         width: 30px;
         height: 30px;
-        background: #FFFFFF;
+        background: ${props => props.selected ? `#CFCFCF` : `#FFFFFF`};
         border: 1px solid #D5D5D5;
         border-radius: 5px;
 
@@ -157,14 +175,8 @@ const Days = styled.div`
         font-weight: 400;
         font-size: 19.976px;
         line-height: 25px;
-        color: #DBDBDB;
+        color: ${props => props.selected ? `#FFFFFF` : `#DBDBDB`};
         margin: 0px 5px 0px 0px;
-    }
-
-    .selected {
-        background: #CFCFCF;
-        color: #FFFFFF;
-    }
 `;
 
 const HabitFooter = styled.div`

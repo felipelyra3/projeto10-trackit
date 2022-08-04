@@ -3,58 +3,73 @@ import Menu from "../Menu/Menu";
 import styled from "styled-components";
 import UserContext from "../Contexts/UserContext";
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import trashbin from "../../assets/images/trashbin.png";
 
-function MyHabitsJSX({ id, nome, days }) {
-    let array = [1, 2, 3, 4, 5, 6, 7];
+function MyHabitsJSX({ id, name, days, context, navigate }) {
+    const array = [
+        { id: 0, letter: 'D', day: 'domingo', selected: false },
+        { id: 1, letter: 'S', day: 'segunda', selected: false },
+        { id: 2, letter: 'T', day: 'terça', selected: false },
+        { id: 3, letter: 'Q', day: 'quarta', selected: false },
+        { id: 4, letter: 'Q', day: 'quinta', selected: false },
+        { id: 5, letter: 'S', day: 'sexta', selected: false },
+        { id: 6, letter: 'S', day: 'sabado', selected: false },
+    ];
 
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < days.length; j++) {
-            if (array[i] === days[j]) {
-                console.log('Igual: ' + array[i]);
-                console.log('days: ' + days[j]);
-            }
+    const array2 = array.map((day) => {
+        if (days.includes(day.id)) {
+            return (
+                {
+                    ...day,
+                    selected: true
+                }
+            );
         }
-    }
+        return day;
+    });
 
     return (
         <Habit>
-            <Title>Ler capítulo 1 de livro</Title>
-            <ContainerDays>
-                {array.map((day, index) => (<div className="days">A</div>))}
-            </ContainerDays>
+            <img src={trashbin} alt="trash" onClick={() => { DeleteHabit(id, context, navigate) }} />
+            <Title>{name}</Title>
+            <Days>
+                {array2.map((day) => (<Day selected={day.selected} >{day.letter}</Day>))}
+            </Days>
         </Habit>
     );
 }
 
-function DaysJSX({ day, id }) {
-    let txt = '';
+function DeleteHabit(id, context, navigate) {
+    console.log('Delete: ' + id);
+    const confirm = window.confirm('Tem certeza que deseja excluir este hábito?');
 
+    if (confirm === true) {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${context.userInfo.token}`
+            }
+        };
+
+        const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config);
+        promise.then(() => {
+            alert('Hábito deletado com sucesso!');
+            navigate('/Rerenderize');
+        });
+        promise.catch((error) => { console.log(error) });
+    }
 
     return (
-        <Days>
-            {id}
-        </Days>
+        <></>
     );
 }
 
 export default function Habbits() {
+    const navigate = useNavigate();
     const context = useContext(UserContext);
     const [request, setRequest] = useState([]);
     const [text, setText] = useState('');
-    const temp = [
-        {
-            id: 1,
-            name: "Nome do hábito",
-            days: [1, 3, 5]
-        },
-        {
-            id: 2,
-            name: "Nome do hábito 2",
-            days: [1, 3, 4, 6]
-        }
-    ];
 
     const config = {
         headers: {
@@ -67,7 +82,7 @@ export default function Habbits() {
 
         promise.then((answer) => {
             setRequest(answer.data);
-            console.log(request);
+            console.log(answer.data);
         });
 
         promise.catch((error) => {
@@ -79,6 +94,8 @@ export default function Habbits() {
     useEffect(() => {
         if (request.length === 0) {
             setText('Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!');
+        } else {
+            setText('');
         }
     });
 
@@ -93,7 +110,7 @@ export default function Habbits() {
                 </MyHabits>
 
                 <HabitsList>
-                    {temp.map((habit, index) => (<MyHabitsJSX key={index} {...habit} />))}
+                    {request.map((habit, index) => (<MyHabitsJSX key={index} {...habit} context={context} navigate={navigate} />))}
                 </HabitsList>
 
                 <Text>{text}</Text>
@@ -159,9 +176,39 @@ const Habit = styled.div`
     border-radius: 5px;
     margin: 12px 0px 0px 0px;
     padding: 3px 12px 3px 12px;
+    position: relative;
+
+    img {
+        position: absolute;
+        top: 5px;
+        right: 8px;
+    }
 `;
 
-const ContainerDays = styled.div`
+const Days = styled.ul`
+    display: flex;
+`;
+
+const Day = styled.li`
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        background: ${props => props.selected ? `#CFCFCF` : `#FFFFFF`};
+        border: 1px solid #D5D5D5;
+        border-radius: 5px;
+
+        font-family: 'Lexend Deca', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 19.976px;
+        line-height: 25px;
+        color: ${props => props.selected ? `#FFFFFF` : `#DBDBDB`};
+        margin: 0px 5px 0px 0px;
+`;
+
+/* const ContainerDays = styled.div`
     display: flex;
 
     .days {
@@ -201,7 +248,7 @@ const Days = styled.div`
     line-height: 25px;
     color: #DBDBDB;
     margin: 0px 5px 0px 0px;
-`;
+`; */
 
 const Title = styled.span`
     font-family: 'Lexend Deca';

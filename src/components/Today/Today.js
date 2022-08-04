@@ -7,27 +7,59 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import UserContext from "../Contexts/UserContext";
 
-function HabbitsJSX({ id, name, days }) {
+function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config }) {
     const [selectCheckmark, setSelectCheckmark] = useState(false);
+    const [request, setRequest] = useState({});
     let txt = 'check';
 
-    if (selectCheckmark === true) {
+    if (done === true) {
         txt += ' selected';
     } else {
         txt = 'check';
     }
 
+    console.log(config);
+
     function toggleCheckmark() {
-        setSelectCheckmark(!selectCheckmark);
+        if (done === false) {
+            console.log('done = false');
+            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, config);
+
+            promise.then((answer) => {
+                setRequest(answer.data);
+                console.log(request);
+                setSelectCheckmark(true);
+                //console.log(request);
+            });
+
+            promise.catch((error) => {
+                console.log(error);
+            });
+        } else if (done === true) {
+            console.log('done = true');
+            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, config);
+
+            promise.then((answer) => {
+                setRequest(answer.data);
+                console.log(request);
+                setSelectCheckmark(false);
+                //console.log(request);
+            });
+
+            promise.catch((error) => {
+                console.log(error);
+            });
+        }
+        //setSelectCheckmark(!selectCheckmark);
     }
 
     return (
         <Habbits>
             <Texts>
-                <Title>Ler 1 capítulo</Title>
+                <Title>{name}</Title>
                 <Subtitle>
-                    <p>Sequência atual: 3 dias</p>
-                    <p>Seu record: 5 dias</p>
+                    <p>Sequência atual: {currentSequence}</p>
+                    <p>Seu record: {highestSequence}</p>
                 </Subtitle>
             </Texts>
 
@@ -53,17 +85,26 @@ export default function Today() {
     }
 
     useEffect(() => {
-        const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config);
+        const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config);
 
         promise.then((answer) => {
             setRequest(answer.data);
-            console.log(request);
+            console.log('Answer: ');
+            console.log(answer.data);
+            //console.log(request);
         });
 
         promise.catch((error) => {
             console.log(error);
         });
     }, []);
+
+    for (let i = 0; i < answer.data.length; i++) {
+        let qtd = 0;
+        if (answer.data.done === true) {
+            qtd++;
+        }
+    }
 
     useEffect(() => {
         if (context.habitPercentage === 0) {
@@ -75,6 +116,8 @@ export default function Today() {
         }
     }, [context.habitPercentage]);
 
+    console.log(request);
+
     return (
         <>
             <Header />
@@ -84,7 +127,7 @@ export default function Today() {
                 <div className={txtClass}>{txt}</div>
 
                 <ContainerHabbits>
-                    {request.map((habit) => (<HabbitsJSX key={habit.id} {...habit} />))}
+                    {request.map((habit) => (<HabbitsJSX key={habit.id} {...habit} config={config} />))}
                 </ContainerHabbits>
 
             </Page>

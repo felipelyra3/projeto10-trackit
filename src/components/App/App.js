@@ -5,6 +5,7 @@ import Today from "../Today/Today";
 import Habits from "../Habits/Habits";
 import History from "../History/History";
 import HabitRegister from "../HabitRegister/HabitRegister";
+import Rerenderize from "../Habits/Rerenderize";
 import UserContext from "../Contexts/UserContext";
 import "../../style/reset.css";
 import { useState } from "react";
@@ -25,6 +26,7 @@ export default function App() {
                     <Route path="/Habits" element={<Habits />} />
                     <Route path="/History" element={<History />} />
                     <Route path="/HabitRegister" element={<HabitRegister />} />
+                    <Route path="/Rerenderize" element={<Rerenderize />} />
                 </Routes>
             </BrowserRouter>
         </UserContext.Provider>
