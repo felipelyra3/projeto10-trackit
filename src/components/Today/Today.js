@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
 import styled from "styled-components";
@@ -8,8 +8,7 @@ import axios from "axios";
 import UserContext from "../Contexts/UserContext";
 
 function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config, navigate }) {
-    const [selectCheckmark, setSelectCheckmark] = useState(false);
-    const [request, setRequest] = useState({});
+    //const [request, setRequest] = useState({});
     let txt = 'check';
     const body = {};
 
@@ -27,9 +26,8 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config, 
             const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, body, config);
 
             promise.then((answer) => {
-                setRequest(answer.data);
+                //setRequest(answer.data);
                 //console.log(request);
-                setSelectCheckmark(true);
                 navigate('/RerenderizeToday');
                 //console.log(request);
             });
@@ -42,9 +40,8 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config, 
             const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, body, config);
 
             promise.then((answer) => {
-                setRequest(answer.data);
+                //setRequest(answer.data);
                 //console.log(request);
-                setSelectCheckmark(false);
                 navigate('/RerenderizeToday');
                 //console.log(request);
             });
@@ -53,7 +50,6 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config, 
                 console.log(error);
             });
         }
-        //setSelectCheckmark(!selectCheckmark);
     }
 
     let record = false;
@@ -68,7 +64,7 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config, 
                 <Title>{name}</Title>
                 <Subtitle>
                     <p>Sequência atual: <CurrentSequence done={done}>{currentSequence}</CurrentSequence></p>
-                    <p>Seu record: <HighestSequence>{highestSequence}</HighestSequence></p>
+                    <p>Seu record: <HighestSequence record={record}>{highestSequence}</HighestSequence></p>
                 </Subtitle>
             </Texts>
 
@@ -78,7 +74,7 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config, 
 }
 
 export default function Today() {
-    const location = useLocation();
+    //const location = useLocation();
     const [request, setRequest] = useState([]);
     const [txt, setTxt] = useState('');
     const [txtClass, setTxtClass] = useState('');
