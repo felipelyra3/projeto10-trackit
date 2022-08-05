@@ -57,7 +57,7 @@ export default function HabitRegister() {
             }
         };
 
-        console.log(body);
+        //console.log(body);
 
         if (allDaysSelected.length === 0) {
             alert('Selecione pelo menos um dia da semana para cadastrar seu hábito');
@@ -76,7 +76,7 @@ export default function HabitRegister() {
             />);
 
             promise.then((answer) => {
-                console.log(answer);
+                //console.log(answer);
                 navigate('/Habits');
             });
 

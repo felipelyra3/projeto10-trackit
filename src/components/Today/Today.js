@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
 import styled from "styled-components";
@@ -7,10 +7,11 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import UserContext from "../Contexts/UserContext";
 
-function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config }) {
+function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config, navigate }) {
     const [selectCheckmark, setSelectCheckmark] = useState(false);
     const [request, setRequest] = useState({});
     let txt = 'check';
+    const body = {};
 
     if (done === true) {
         txt += ' selected';
@@ -18,17 +19,18 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config }
         txt = 'check';
     }
 
-    console.log(config);
+    //console.log(config);
 
     function toggleCheckmark() {
         if (done === false) {
-            console.log('done = false');
-            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, config);
+            //console.log('done = false');
+            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, body, config);
 
             promise.then((answer) => {
                 setRequest(answer.data);
-                console.log(request);
+                //console.log(request);
                 setSelectCheckmark(true);
+                navigate('/RerenderizeToday');
                 //console.log(request);
             });
 
@@ -36,13 +38,14 @@ function HabbitsJSX({ name, id, highestSequence, currentSequence, done, config }
                 console.log(error);
             });
         } else if (done === true) {
-            console.log('done = true');
-            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, config);
+            //console.log('done = true');
+            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, body, config);
 
             promise.then((answer) => {
                 setRequest(answer.data);
-                console.log(request);
+                //console.log(request);
                 setSelectCheckmark(false);
+                navigate('/RerenderizeToday');
                 //console.log(request);
             });
 
@@ -81,6 +84,7 @@ export default function Today() {
     const [txtClass, setTxtClass] = useState('');
     const context = useContext(UserContext);
     const dayjs = require('dayjs');
+    const navigate = useNavigate();
     let qtd = 0;
 
     //console.log(context.userInfo);
@@ -96,8 +100,8 @@ export default function Today() {
 
         promise.then((answer) => {
             setRequest(answer.data);
-            console.log('Answer: ');
-            console.log(answer.data);
+            //console.log('Answer: ');
+            //console.log(answer.data);
             //console.log(request);
         });
 
@@ -112,7 +116,7 @@ export default function Today() {
         }
     }
 
-    context.setHabitPercentage((qtd / request.length) * 100);
+    context.setHabitPercentage(((qtd / request.length) * 100).toFixed());
 
     useEffect(() => {
         if (context.habitPercentage === 0) {
@@ -124,7 +128,7 @@ export default function Today() {
         }
     }, [context.habitPercentage]);
 
-    console.log(request);
+    //console.log(request);
 
     return (
         <>
@@ -135,7 +139,7 @@ export default function Today() {
                 <div className={txtClass}>{txt}</div>
 
                 <ContainerHabbits>
-                    {request.map((habit) => (<HabbitsJSX key={habit.id} {...habit} config={config} />))}
+                    {request.map((habit) => (<HabbitsJSX key={habit.id} {...habit} config={config} navigate={navigate} />))}
                 </ContainerHabbits>
 
             </Page>
@@ -262,5 +266,5 @@ const CurrentSequence = styled.span`
 `;
 
 const HighestSequence = styled.span`
-    color: ${props => props.record ? `#8FC549` : `#666666`};
+    color: ${props => props.record ? `#666666` : `#8FC549`};
 `;

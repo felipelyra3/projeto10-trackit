@@ -42,7 +42,7 @@ function MyHabitsJSX({ id, name, days, context, navigate }) {
 }
 
 function DeleteHabit(id, context, navigate) {
-    console.log('Delete: ' + id);
+    //console.log('Delete: ' + id);
     const confirm = window.confirm('Tem certeza que deseja excluir este hábito?');
 
     if (confirm === true) {
@@ -82,7 +82,7 @@ export default function Habbits() {
 
         promise.then((answer) => {
             setRequest(answer.data);
-            console.log(answer.data);
+            //console.log(answer.data);
         });
 
         promise.catch((error) => {

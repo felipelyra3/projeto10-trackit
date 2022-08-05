@@ -35,7 +35,7 @@ export default function Login() {
         />);
 
         post.then((answer) => {
-            console.log(answer);
+            //console.log(answer);
             context.setUserInfo(answer.data);
             navigate('/Today');
         })
@@ -43,7 +43,7 @@ export default function Login() {
         post.catch((error) => {
             alert('E-mail ou login inválidos');
             setButtonText('Cadastrar');
-            console.log(error);
+            //console.log(error);
         })
     }
 

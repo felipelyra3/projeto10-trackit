@@ -38,8 +38,8 @@ export default function SignUp() {
         />);
 
         post.then((answer) => {
-            console.log(body);
-            console.log(answer);
+            //console.log(body);
+            //console.log(answer);
             navigate('/');
         });
 
@@ -47,7 +47,7 @@ export default function SignUp() {
             alert('Erro. Tente novamente');
             console.log(error);
             setButtonText('Cadastrar');
-            console.log('fim');
+            //console.log('fim');
         });
 
         /* if (post) {
