@@ -112,7 +112,11 @@ export default function Today() {
         }
     }
 
-    context.setHabitPercentage(((qtd / request.length) * 100).toFixed());
+    if (qtd > 0) {
+        context.setHabitPercentage(((qtd / request.length) * 100).toFixed());
+    } else {
+        context.setHabitPercentage(0);
+    }
 
     useEffect(() => {
         if (context.habitPercentage === 0) {

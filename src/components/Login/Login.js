@@ -10,6 +10,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [buttonText, setButtonText] = useState('Cadastrar');
+    const [disabled, setDisabled] = useState(false);
     const context = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -22,6 +23,8 @@ export default function Login() {
         }
 
         const post = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', body);
+
+        setDisabled(true);
 
         setButtonText(<ThreeDots
             text-align="center"
@@ -42,6 +45,7 @@ export default function Login() {
 
         post.catch((error) => {
             alert('E-mail ou login inválidos');
+            setDisabled(false);
             setButtonText('Cadastrar');
             //console.log(error);
         })
@@ -53,8 +57,8 @@ export default function Login() {
 
             <Form>
                 <form onSubmit={handleForm}>
-                    <input type="email" id="email" placeholder="E-mail" value={email} onChange={(e) => { setEmail(e.target.value) }} required></input><br />
-                    <input type="password" id="password" placeholder="Senha" value={password} onChange={(e) => { setPassword(e.target.value) }} required></input><br />
+                    <input type="email" id="email" placeholder="E-mail" value={email} onChange={(e) => { setEmail(e.target.value) }} disabled={disabled} required></input><br />
+                    <input type="password" id="password" placeholder="Senha" value={password} onChange={(e) => { setPassword(e.target.value) }} disabled={disabled} required></input><br />
 
                     <Button>{buttonText}</Button>
                 </form>

@@ -24,6 +24,7 @@ export default function HabitRegister() {
     const [selectedDay, setSelectedDay] = useState(false);
     const context = useContext(UserContext);
     const [buttonText, setButtonText] = useState('Salvar');
+    const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
     const [days, setDays] = useState([
         { id: 0, letter: 'D', day: 'domingo', selected: false },
@@ -64,6 +65,8 @@ export default function HabitRegister() {
         } else {
             const promise = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', body, config);
 
+            setDisabled(true);
+
             setButtonText(<ThreeDots
                 text-align="center"
                 height="40"
@@ -82,6 +85,7 @@ export default function HabitRegister() {
 
             promise.catch((error) => {
                 console.log(error);
+                setDisabled(false);
                 setButtonText('Salvar');
             });
         }
@@ -111,7 +115,7 @@ export default function HabitRegister() {
                 <Habit>
                     <Form onSubmit={handleForm}>
                         <HabitName><input type="text" id="habitName" placeholder="Nome do hábito" value={obj.name} onChange={
-                            (e) => { setObj({ ...obj, name: e.target.value }) }} required></input><br /></HabitName>
+                            (e) => { setObj({ ...obj, name: e.target.value }) }} disabled={disabled} required></input><br /></HabitName>
                         <Days>
                             {days.map((day, index) => (<DaysOfTheWeekJSX key={index} day={day} toggleSelectedDay={toggleSelectedDay} />))}
                         </Days>

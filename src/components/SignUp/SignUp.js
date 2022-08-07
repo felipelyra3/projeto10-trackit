@@ -8,6 +8,7 @@ import { ThreeDots } from 'react-loader-spinner';
 
 export default function SignUp() {
     const [buttonText, setButtonText] = useState('Cadastrar');
+    const [disabled, setDisabled] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -25,6 +26,8 @@ export default function SignUp() {
         }
 
         const post = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up', body);
+
+        setDisabled(true);
 
         setButtonText(<ThreeDots
             text-align="center"
@@ -46,6 +49,7 @@ export default function SignUp() {
         post.catch((error) => {
             alert('Erro. Tente novamente');
             console.log(error);
+            setDisabled(false);
             setButtonText('Cadastrar');
             //console.log('fim');
         });
@@ -95,10 +99,10 @@ export default function SignUp() {
 
             <Form>
                 <form onSubmit={handleForm}>
-                    <input type="email" id="email" placeholder="E-mail" value={email} onChange={(e) => { setEmail(e.target.value) }} required></input><br />
-                    <input type="password" id="password" placeholder="Senha" value={password} onChange={(e) => { setPassword(e.target.value) }} required></input><br />
-                    <input type="text" id="name" placeholder="Nome" value={name} onChange={(e) => { setName(e.target.value) }} required></input><br />
-                    <input type="text" id="image" placeholder="Foto" value={image} onChange={(e) => { setImage(e.target.value) }} required></input><br />
+                    <input type="email" id="email" placeholder="E-mail" value={email} onChange={(e) => { setEmail(e.target.value) }} disabled={disabled} required></input><br />
+                    <input type="password" id="password" placeholder="Senha" value={password} onChange={(e) => { setPassword(e.target.value) }} disabled={disabled} required></input><br />
+                    <input type="text" id="name" placeholder="Nome" value={name} onChange={(e) => { setName(e.target.value) }} disabled={disabled} required></input><br />
+                    <input type="text" id="image" placeholder="Foto" value={image} onChange={(e) => { setImage(e.target.value) }} disabled={disabled} required></input><br />
 
                     <Button>{buttonText}</Button>
                 </form>
